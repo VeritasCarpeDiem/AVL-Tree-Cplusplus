@@ -1,3 +1,3 @@
 # AVL-Cplusplus
 ## Instructions:
-![image](Capture.png)
+![image](Capture.PNG)
