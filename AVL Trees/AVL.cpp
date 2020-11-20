@@ -195,11 +195,11 @@ void AVL::PreOrder()
 		Stack <std::shared_ptr<Node>> stack{};
 
 		stack.Push(root);
-		std::shared_ptr<Node> current;
+		//std::shared_ptr<Node> current;
 
 		while (stack.count > 0)
 		{
-			current = stack.Pop();
+			auto current = stack.Pop();
 			output.push_back(current->value);
 			if (current->right)
 			{
@@ -211,12 +211,11 @@ void AVL::PreOrder()
 			}
 		}
 	}
-	
-	std::list<int>::iterator i;
+	//std::list<int>::iterator i;
 
 	std::cout << "Pre Order:" << std::endl;
 
-	for (i=output.begin(); i != output.end(); i++)
+	for (auto i=output.begin(); i != output.end(); i++)
 	{
 		std::cout << *i << std::endl;
 	}
