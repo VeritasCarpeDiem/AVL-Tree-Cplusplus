@@ -3,11 +3,6 @@
 #include <list>
 #include "Stack.h"
 
-AVL::AVL()
-{
-
-}
-
 AVL::~AVL()
 {
 	Clear();
@@ -16,15 +11,15 @@ AVL::~AVL()
 void AVL::Clear()
 {
 	count = 0;
-	
-	Stack <std::shared_ptr<Node>> stack{};
+
+	Stack<std::shared_ptr<Node>> stack{};
 
 	if (root)
 	{
 		stack.Push(root);
-		while (stack.count> 0)
+		while (stack.count > 0)
 		{
-			root = std::move(stack.Pop());
+			root = stack.Pop();
 			if (root->right)
 			{
 				stack.Push(root->right);
@@ -37,88 +32,68 @@ void AVL::Clear()
 		}
 	}
 }
+
 void AVL::Add(int value)
 {
 	count++;
-	root = std::move(Add(value, root));
+	root = Add(value, root);
 }
 
-std::shared_ptr<Node> AVL::Add(int value, std::shared_ptr<Node> node)
+std::shared_ptr<Node> AVL::Add(int value, const std::shared_ptr<Node>& node)
 {
-	if (node == nullptr)
+	if (!node)
 	{
-		std::shared_ptr<Node> newNode = std::make_shared<Node>(value);
-		return newNode;
+		return std::make_shared<Node>(value);
 	}
 
 	if (value >= node->value)
 	{
-		if (node->right)
-		{
-			node->right = Add(value, node->right);
-		}
-		else
-		{
-			node->right = std::move(std::make_shared<Node>(value));
-		}
+		node->right = Add(value, node->right);
 	}
 	else
 	{
-		if (node->left)
-		{
-			node->left = Add(value, node->left);
-		}
-		else
-		{
-			node->left = std::make_shared<Node>(value);
-		}
+		node->left = Add(value, node->left);
 	}
 
 	return Balance(node);
 }
 
-std::shared_ptr<Node> AVL::Remove(int value, std::shared_ptr<Node> node)
+std::shared_ptr<Node> AVL::Remove(int value, const std::shared_ptr<Node>& node)
 {
-	if (node == nullptr)
+	if (!node) return {};
+
+	if (value < node->value)
 	{
-		return nullptr;
+		node->left = Remove(value, node->left);
+	}
+	else if (value > node->value)
+	{
+		node->right = Remove(value, node->right);
 	}
 
-	if (node->value > value)
-	{
-		node->left = std::move(Remove(value, node->left));
-	}
-	else if (node->value < value)
-	{
-		node->right = std::move(Remove(value, node->right));
-	}
 	else
 	{
-		if (node->right && node->left)
+		if (node->ChildCount() == 2)
 		{
-			auto min = Minimum(node->right);
-			node->value = min->value;
-			node->right = std::move(Remove(min->value, node->right));
+			auto temp = Minimum(node->right);
+			node->value = temp->value;
+			node->right = Remove(temp->value, node->right);
 		}
 		else
 		{
 			count--;
-			if (node->right)
+			auto firstFirst = node->left;
+			if (!firstFirst)
 			{
-				return node->right;
+				firstFirst = node->right;
 			}
-			else if (node->left)
-			{
-				return node->left;
-			}
-			else
-			{
-				return nullptr;
-			}
+
+			return firstFirst;
 		}
 	}
 
-	return Balance(node);
+	//	return Balance(node);
+	return node;
 }
 
 std::shared_ptr<Node> AVL::Minimum(std::shared_ptr<Node> node)
@@ -130,7 +105,7 @@ std::shared_ptr<Node> AVL::Minimum(std::shared_ptr<Node> node)
 	return node;
 }
 
-
+// TODO: Fix Balance function
 std::shared_ptr<Node> AVL::Balance(std::shared_ptr<Node> node)
 {
 	int balance = node->getBalance();
@@ -140,10 +115,10 @@ std::shared_ptr<Node> AVL::Balance(std::shared_ptr<Node> node)
 		{
 			if (node->left->getBalance() > 0)
 			{
-				node->left = std::move(RotateRight(node->left));
+				node->left = RotateLeft(node->left);
 			}
 		}
-		node = std::move(RotateLeft(node));
+		node = RotateRight(node);
 	}
 	else if (balance > 1)
 	{
@@ -151,15 +126,15 @@ std::shared_ptr<Node> AVL::Balance(std::shared_ptr<Node> node)
 		{
 			if (node->right->getBalance() < 0)
 			{
-				node->right = std::move(RotateLeft(node->right));
+				node->right = RotateRight(node->right);
 			}
 		}
-		node = std::move(RotateRight(node));
+		node = RotateLeft(node);
 	}
 	return node;
 }
 
-std::shared_ptr<Node> AVL::RotateRight(std::shared_ptr<Node> node)
+std::shared_ptr<Node> AVL::RotateRight(const std::shared_ptr<Node>& node)
 {
 	auto left = node->left;
 	node->left = std::move(left->right);
@@ -169,7 +144,7 @@ std::shared_ptr<Node> AVL::RotateRight(std::shared_ptr<Node> node)
 	return left;
 }
 
-std::shared_ptr<Node> AVL::RotateLeft(std::shared_ptr<Node> node)
+std::shared_ptr<Node> AVL::RotateLeft(const std::shared_ptr<Node>& node)
 {
 	auto right = node->right;
 	node->right = std::move(right->left);
@@ -182,17 +157,17 @@ std::shared_ptr<Node> AVL::RotateLeft(std::shared_ptr<Node> node)
 
 bool AVL::Delete(int value)
 {
-	int oldCount = count;
+	auto oldCount = count;
 	Remove(value, root);
 	return count != oldCount;
 }
 
-void AVL::PreOrder()
+void AVL::PreOrder() const
 {
 	std::list<int> output{};
 	if (count > 0)
 	{
-		Stack <std::shared_ptr<Node>> stack{};
+		Stack<std::shared_ptr<Node>> stack{};
 
 		stack.Push(root);
 		//std::shared_ptr<Node> current;
@@ -215,7 +190,7 @@ void AVL::PreOrder()
 
 	std::cout << "Pre Order:" << std::endl;
 
-	for (auto i=output.begin(); i != output.end(); i++)
+	for (auto i = output.begin(); i != output.end(); i++)
 	{
 		std::cout << *i << std::endl;
 	}
