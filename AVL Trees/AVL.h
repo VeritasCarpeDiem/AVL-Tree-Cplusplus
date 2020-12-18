@@ -5,8 +5,8 @@ class AVL
 {
 private:
 	int count{};
-	std::shared_ptr<Node> Add(int value, std::shared_ptr<Node> node);
-	std::shared_ptr<Node> Remove(int value, std::shared_ptr<Node> node);
+	std::shared_ptr<Node> Add(int value, const std::shared_ptr<Node> &node);
+	std::shared_ptr<Node> Remove(int value, const std::shared_ptr<Node> &node);
 	std::shared_ptr<Node> Minimum(std::shared_ptr<Node> node);
 
 public:
@@ -17,12 +17,12 @@ public:
 
 	void Add(int value);
 	std::shared_ptr<Node> Balance(std::shared_ptr<Node> node);
-	std::shared_ptr<Node> RotateRight(std::shared_ptr<Node> node);
-	std::shared_ptr<Node> RotateLeft(std::shared_ptr<Node> node);
+	std::shared_ptr<Node> RotateRight(const std::shared_ptr<Node> &node);
+	std::shared_ptr<Node> RotateLeft(const std::shared_ptr<Node> &node);
 
 	bool Delete(int value);
 
-	void PreOrder();
+	void PreOrder() const;
 	//void InOrder();
 	//void PostOrder();
 	//void BreadthFirst();
