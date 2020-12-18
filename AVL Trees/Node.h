@@ -63,7 +63,7 @@ public:
 		{
 			leftH= left->getHeight();
 		}
-		return leftH - rightH;
+		return rightH - leftH;
 	}
 };
 

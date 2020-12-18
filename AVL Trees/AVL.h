@@ -12,7 +12,8 @@ private:
 public:
 	std::shared_ptr<Node> root{};
 
-	AVL();
+	AVL()= default; //if programmer provided parameters, use that
+
 	~AVL();
 
 	void Add(int value);

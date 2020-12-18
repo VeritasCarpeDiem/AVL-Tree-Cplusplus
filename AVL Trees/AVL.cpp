@@ -7,6 +7,10 @@ AVL::~AVL()
 {
 	Clear();
 }
+//AVL::AVL()
+//{
+//
+//}//runs this if defined
 
 void AVL::Clear()
 {
@@ -92,8 +96,8 @@ std::shared_ptr<Node> AVL::Remove(int value, const std::shared_ptr<Node>& node)
 		}
 	}
 
-	//	return Balance(node);
-	return node;
+	return Balance(node);
+	//return node;
 }
 
 std::shared_ptr<Node> AVL::Minimum(std::shared_ptr<Node> node)
@@ -137,7 +141,7 @@ std::shared_ptr<Node> AVL::Balance(std::shared_ptr<Node> node)
 std::shared_ptr<Node> AVL::RotateRight(const std::shared_ptr<Node>& node)
 {
 	auto left = node->left;
-	node->left = std::move(left->right);
+	node->left = left->right;
 	auto tempNode = node;
 	left->right = std::move(tempNode);
 
@@ -147,7 +151,7 @@ std::shared_ptr<Node> AVL::RotateRight(const std::shared_ptr<Node>& node)
 std::shared_ptr<Node> AVL::RotateLeft(const std::shared_ptr<Node>& node)
 {
 	auto right = node->right;
-	node->right = std::move(right->left);
+	node->right = right->left;
 	auto tempNode = node;
 	right->left = std::move(tempNode);
 
@@ -158,7 +162,7 @@ std::shared_ptr<Node> AVL::RotateLeft(const std::shared_ptr<Node>& node)
 bool AVL::Delete(int value)
 {
 	auto oldCount = count;
-	Remove(value, root);
+	root=Remove(value, root);
 	return count != oldCount;
 }
 

@@ -16,9 +16,25 @@ std::pair<char, std::string> splitString(std::string input)
 
 int main()
 {
-	std::fstream file("c:\\temp\\input.txt");
+	//std::fstream file("c:\\temp\\input.txt");
 	AVL avl{};
-	int num{};
+	/*avl.Add(5);
+	avl.Add(3);
+	avl.Add(8);
+	avl.Add(10);
+	bool res = avl.Delete(3);*/
+
+	//avl.Add(20);
+	//avl.Add(30);
+
+	for (size_t i = 0; i < 10; i++)
+	{
+		avl.Add(i);
+	}
+
+	std::cout << "test";
+
+	/*int num{};
 	std::string line{};
 	
 	if (file.is_open())
@@ -45,7 +61,7 @@ int main()
 		avl.PreOrder();
 		file.close();
 	}
-	
+	*/
 
 	return 0;
 }
